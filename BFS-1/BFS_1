@@ -1,0 +1,73 @@
+//==================================== Level order Traversal===============================
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    List<List<Integer>> result;
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        result = new ArrayList<>();
+    
+        if(root == null)
+            return result;
+
+        //BFS Solution
+        // We need list of distinct value in each level.
+        // It is necessary to maintain level size to move to next level after processing the current level.
+        // A node(root) is added to queue. Its SIZE has to be calculated
+        // Get the value of nodes untill the size of queue.
+        // Add the childen of the node to same queue.
+        // Calculate the NEW SIZE of queue. At this previous level nodes would have been processed.
+        // Add the list fo elements at each level to resultant list.
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+       while(!q.isEmpty()){
+           int size = q.size();  // Calculate the size of queue.
+           List<Integer> temp = new ArrayList<>();
+           
+           for(int i=0; i< size; i++){  // Process the nodes until the size of que.
+             
+                TreeNode curr = q.poll(); // Poll will remove the head node from the queue.
+                temp.add(curr.val);
+                if(curr.left != null) 
+                    q.add(curr.left);
+                if(curr.right != null)
+                    q.add(curr.right);   // add the child nodes left and right. Since we process only till old size newly added values will be processed at the next iteration.
+              
+               
+           }
+          
+            result.add(temp);  
+           }
+        
+        //DFS Solution
+        // dfs(root,0);
+        return result;
+       }
+        
+        
+    
+    // DFS solution for level order traversal.
+    // Go each level down in left by incrementing the levelHeight
+    // If levelHeight equals to the size of result list. Create new array list and add to the result list
+    // If levelheight is less than the size of result list, get the array list at that level and append the current root value.
+    private void dfs(TreeNode root, int levelHeight){
+        
+        //Base
+        if(root == null)
+            return;
+        //logic
+        if(levelHeight == result.size()){
+            result.add(new ArrayList<>());  // Create new array list when the resultant size is equal to level of list.
+        }
+        result.get(levelHeight).add(root.val);   // Append the current value to the hight index of the result list.
+        dfs(root.left, levelHeight+1);
+        dfs(root.right, levelHeight+1);
+        
+    }
+}
